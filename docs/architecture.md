@@ -43,22 +43,30 @@ flowchart LR
 
 ## Decisões de implementação
 
-Registre seu plano aqui antes de editar o código.
+- **Camada de apresentação:** conectar os componentes ao cliente HTTP compartilhado, com estados acessíveis de carregamento, vazio e erro. Manter o texto visível em português do Brasil.
+- **Camada de lógica:** manter as rotas responsáveis pelo HTTP e implementar validação e regras de negócio nos serviços, retornando erros 4xx intencionais para entradas inválidas.
+- **Camada de dados:** definir nos modelos Mongoose os campos obrigatórios e seus relacionamentos; preservar o seed idempotente e os dados não relacionados.
+- **Registro de atividades:** validar os campos e a existência de pessoa e equipe, calcular pontos e data, persistir a atividade e disponibilizá-la na listagem.
+- **Gerenciamento de equipes:** validar nome e mascote, criar equipes com seus integrantes e manter esses dados na listagem.
+- **Placar:** somar os pontos das atividades por equipe, ordenar por pontuação decrescente e atribuir posições a partir de 1.
+- **Sugestões de treino:** localizar a pessoa pelo e-mail, considerar sua meta e atividades recentes e retornar sugestões compatíveis com uma justificativa; retornar 4xx quando ela não existir.
 
-- Decisão da camada de apresentação:
-- Decisão da camada de lógica:
-- Decisão da camada de dados:
-- Abordagem para registro de atividades:
-- Abordagem para gerenciamento de equipes:
-- Abordagem para o placar:
-- Abordagem para sugestões de treino:
+Implementar primeiro os modelos e verificar o seed; depois, os serviços e contratos da API; por fim, as telas e seus estados. Não introduzir autenticação.
 
 ## Plano de testes
 
-Registre os comandos executados e o significado de cada falha.
+Executar os comandos a partir da raiz do repositório, após cada etapa correspondente:
 
-- Testes da camada de dados: `npm run test:data --prefix octofit-tracker/backend`
-- Testes da API: `npm run test:api --prefix octofit-tracker/backend`
-- Testes do frontend: `npm test --prefix octofit-tracker/frontend`
-- Compilação do backend: `npm run build --prefix octofit-tracker/backend`
-- Compilação do frontend: `npm run build --prefix octofit-tracker/frontend`
+1. `npm run test:data --prefix octofit-tracker/backend`: verificar os modelos e o seed idempotente, incluindo a preservação de dados existentes.
+2. `npm run test:api --prefix octofit-tracker/backend`: verificar atividades, equipes, placar, sugestões e respostas para entradas inválidas.
+3. `npm test --prefix octofit-tracker/frontend`: verificar os dados apresentados e os estados acessíveis das quatro telas.
+4. `npm run build --prefix octofit-tracker/backend`: verificar a compilação do backend.
+5. `npm run build --prefix octofit-tracker/frontend`: verificar a compilação do frontend.
+
+### Falhas relatadas inicialmente
+
+- **Dados:** quatro testes de validação falham porque os modelos ainda não exigem os campos previstos; o teste de seed não foi listado entre as falhas.
+- **API:** os quatro testes falham: criação de atividades e equipes, ordenação do placar e sugestões personalizadas. Os serviços correspondentes estão incompletos.
+- **Frontend:** os 15 testes relatados falham porque as telas ainda exibem conteúdo provisório, sem consultar a API nem apresentar os estados esperados.
+
+O comando `DEBUG_PRINT_LIMIT=1 npm -s test --prefix octofit-tracker/frontend` foi executado no terminal e terminou com código 1. Os demais resultados acima foram informados no relato inicial; os testes e as compilações não foram executados durante a elaboração deste plano.
